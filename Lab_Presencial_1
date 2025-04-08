@@ -1,0 +1,55 @@
+%% CÁLCULO DE LAS TRANSFORMADA DE FOURIER
+
+L = length(t);          
+% % EVITAR WARNING
+if mod(L, 2) ~= 0
+    t = t(1:end-1);
+    m_t = m_t(1:end-1);
+    muestreo_natural = muestreo_natural(1:end-1);
+    L = L - 1;
+end
+
+f = (0:L/2)*(1/Tm)/L;
+
+% Transformada de la señal ORIGINAL
+M_f = abs(fft(m_t)/L);
+M_f = M_f(1:L/2+1);
+
+% Transformada de PAM NATURAK
+PAM_nat_f = abs(fft(muestreo_natural)/L);
+PAM_nat_f = PAM_nat_f(1:L/2+1);
+
+% Transformada de PAM INSTANTANEO
+pam_inst_completa = zeros(size(t));
+% EVITAR WARNING
+for n = 1:length(t_samples)
+    [~, idx] = min(abs(t - t_samples(n)));
+    pam_inst_completa(idx) = pulsos_inst(n);
+end
+PAM_inst_f = abs(fft(pam_inst_completa)/L);
+PAM_inst_f = PAM_inst_f(1:L/2+1);
+
+%% Gráfico de las señales en tiempo
+figure;
+subplot(2,1,1);
+plot(t, m_t, 'b', 'LineWidth', 1.2); hold on;
+stem(t_samples, pulsos_inst, 'r', 'filled', 'LineWidth', 1.1, 'MarkerSize', 4);
+plot(t, muestreo_natural, 'g--', 'LineWidth', 1);
+xlabel('Tiempo (s)');
+ylabel('Amplitud');
+title('Señales en el dominio del tiempo');
+legend('Señal original m(t)', 'Muestreo Instantáneo (PAM)', 'Muestreo Natural (PAM)');
+grid on;
+xlim([0 0.004]);
+
+%% Gráfico de las transformadas de Fourier
+subplot(2,1,2);
+plot(f, M_f, 'b', 'LineWidth', 1.5); hold on;
+plot(f, PAM_nat_f, 'g--', 'LineWidth', 1.2);
+plot(f, PAM_inst_f, 'r-.', 'LineWidth', 1.2);
+xlabel('Frecuencia (Hz)');
+ylabel('Magnitud');
+title('Espectros de frecuencia (parte positiva)');
+legend('Señal original', 'PAM natural', 'PAM instantáneo');
+grid on;
+xlim([0 15000]);
