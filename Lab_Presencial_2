@@ -1,0 +1,56 @@
+A = 1;
+fc = 1000;
+dt = 1/100000;
+t = 0:dt:0.0035;
+m = A * sin(2pifct);
+
+fs = 10000;
+Ts = 1/fs;
+
+n_samples = 0:Ts:max(t);
+minst = A sin(2pifc*n_samples);
+N = 3;  % Bits por muestra
+levels = 2^N;
+m_min = min(minst);
+m_max = max(minst);
+q_step = (m_max - m_min) / (levels - 1);
+quant_levels = linspace(m_min, m_max, levels);
+[~, indices] = min(abs(minst' - quant_levels), [], 2);
+pcm_signal = quant_levels(indices)';
+figure;
+plot(t, m, 'b', 'DisplayName', 'Señal original');
+hold on;
+stem(n_samples, minst, 'r', 'DisplayName', 'Muestreo instantáneo');
+stairs(n_samples, pcm_signal, 'k', 'LineWidth', 1.5, 'DisplayName', 'PCM cuantificado');
+xlabel('Tiempo [s]');
+ylabel('Amplitud');
+legend;
+title('Comparación de señales');
+grid on;
+
+error_q = minst - pcm_signal;
+figure;
+stem(n_samples, error_q, 'filled');
+xlabel('Tiempo [s]');
+ylabel('Error');
+title('Error de cuantización por muestra');
+grid on;
+
+N_vals = [2, 4, 8];
+
+for i = 1:length(N_vals)
+    N = N_vals(i);
+    levels = 2^N;
+    q_step = (m_max - m_min) / (levels - 1);
+    quant_levels = linspace(m_min, m_max, levels);
+    [~, indices] = min(abs(minst' - quant_levels), [], 2);
+    pcm_signal = quant_levels(indices)';
+    error_q = minst - pcm_signal;
+
+    figure;
+    stem(n_samples, error_q, 'filled');
+    xlabel('Tiempo [s]');
+    ylabel('Error');
+    title(['Error de cuantización para N = ', num2str(N), ' bits']);
+    grid on;
+end
