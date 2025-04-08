@@ -1,0 +1,43 @@
+%% Parámetros
+A = 1;                 % Amplitud
+fc = 1000;             % Frecuencia señal m(t)
+Tm = 1/100000;         % Resolución temporal
+t = 0:Tm:0.004;        % Vector de tiempo
+m_t = A * sin(2 * pi * fc * t);  % Señal original
+
+%% Parámetros de muestreo
+fs = 8000;             % Frecuencia de muestreo
+Ts = 1/fs;             % Período de muestreo
+d = 0.5;               % Ciclo de trabajo (50%)
+
+% Tiempo de cada pulso rectangular
+dur_pulso = d * Ts;
+
+%% Generación de pulsos naturales (PAM natural con pulsos extendidos)
+muestreo_natural = zeros(size(t));
+
+for n = 0:floor(t(end)/Ts)
+    t0 = n * Ts;
+    idx = find(t >= t0 & t < t0 + dur_pulso);
+    if ~isempty(idx)
+        muestreo_natural(idx) = A * sin(2 * pi * fc * t0);  % Valor fijo durante el pulso
+    end
+end
+
+%% Muestreo instantáneo (solo muestra puntual)
+t_samples = 0:Ts:t(end);
+pulsos_inst = A * sin(2 * pi * fc * t_samples);
+
+%% Gráfico conjunto
+figure;
+plot(t, m_t, 'b', 'LineWidth', 1.2); hold on;
+stem(t_samples, pulsos_inst, 'r', 'filled', 'LineWidth', 1.1); % PAM instantáneo
+plot(t, muestreo_natural, 'g--', 'LineWidth', 1);               % PAM natural extendido
+
+xlabel('Tiempo (s)');
+ylabel('Amplitud');
+title('Comparación de m(t), PAM Instantáneo y PAM Natural');
+legend('Señal original m(t)', 'Muestreo Instantáneo (PAM)', 'Muestreo Natural (PAM)');
+grid on;
+xlim([0 0.004]);  % Enfocar la zona relevante
+﻿
