@@ -1,0 +1,105 @@
+#set page(margin: 1.1in, paper: "us-letter")
+#import "@preview/codelst:2.0.2": sourcecode
+#set par(leading: 0.55em, spacing: 0.55em, first-line-indent: 1.8em, justify: true)
+#set heading(numbering: "1.")
+#set figure(supplement: text("Figura", size: 1em, weight: "bold"))
+#set text(font: "New Computer Modern")
+#show raw: set text(font: "New Computer Modern Mono")
+#show heading: set block(above: 1.4em, below: 1em)
+#show outline.entry.where(
+  level: 1
+): it => {
+  v(20pt, weak: true)
+  strong(it) 
+}
+
+#align(center,image("img/Portada/Escudo_UDP.png", width: 7em))
+#v(1cm)
+#align(center,text("Universidad Diego Portales", size: 2.3em, weight: "bold"))
+#v(1cm)
+#align(center, text(smallcaps[Facultad de Ingeniería y Ciencias], size: 1.7em, weight: "extralight"))
+#v(0.4cm)
+#align(center, text(smallcaps[Escuela de Informática y Telecomunicaciones], size: 1.2em, weight: "extralight"))
+
+#v(3cm)
+#align(center, text(smallcaps[Título del informe], size: 2em, weight: "extralight"))
+#v(3cm)
+#align(center, text("Subtitulo del informe", size: 1.5em, weight: "extralight", style: "italic"))
+
+#v(2cm)
+#align(center, 
+[#text("Profesor/a:", size: 1em, weight: "bold")
+#text("(Nombre)", size: 1em)]
+)
+#v(3pt)
+#align(center, 
+[#text("Autor/Integrantes:", size: 1em, weight: "bold")
+#text("(Nombre/s)", size: 1em)]
+)
+#v(3pt)
+#align(center, 
+[#text("Curso:", size: 1em, weight: "bold")
+#text("(Nombre)", size: 1em)]
+)
+
+#v(2cm)
+#align(center,text("Marzo 2025", size: 1.1em, weight: "medium"))
+
+#set page(header: [
+  #stack(
+    dir: ltr,
+    spacing: 1fr,
+    image("img/Portada/Logo FIC.png", height: 0.7cm),
+    list(
+      marker: "",
+      text("Facultad de Ingeniería y Ciencias")
+    )
+  )
+  #line(length: 100%)
+])
+#pagebreak()
+
+
+#set page(footer: context {
+  let current = counter(page).get().at(0)
+  [
+    #line(length: 100%)
+    #h(1fr)
+    Página #current
+  ]
+})
+#outline(title: "Índice")
+
+#pagebreak()
+
+= Sección 1
+
+*Ejemplo de Imagen*
+#v(5pt)
+#figure(
+  image("img/Portada/Escudo_UDP.png", width: 20%),
+  caption: [Ejemplo Imagen],
+) 
+\
+\
+\
+\
+*Ejemplo de Codigo*
+#v(5pt)
+#figure(caption: [Código en C++], kind: image,
+box(width: 100%,sourcecode(
+```cpp
+
+//[Inserte codigo]
+
+```)))
+
+
+== Subsección 1
+=== Subsubsección 1
+#pagebreak()
+
+= Sección 2
+== Subsección 2
+=== Subsubsección 2
+
